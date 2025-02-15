@@ -1,5 +1,5 @@
 import { createApp } from "vue";
 import App from "./App.vue";
-import store from "./store";
+import { clickOutside } from "@/directives/click-outside";
 
-createApp(App).use(store).mount("#app");
+createApp(App).directive("click-outside", clickOutside).mount("#app");
