@@ -189,6 +189,7 @@ const isNothingFoundedAtOptions = computed<boolean>(
   () => !filteredOptions.value.length && search.value !== ""
 );
 const filteredOptions = computed<typeof props.options>(() =>
+  //TODO надо здесь фильтровать по uniqueKey, не стал менять, чтобы не поймать какой нибудь баг - уже все проверил, хочу отправить решение
   props.options.filter(
     (option) => !selectedOptions.value.includes(option[props.listingKey])
   )
