@@ -61,8 +61,9 @@ const fetchOptions = async (search: string) => {
   height: 80px;
 }
 .habr-suggest :deep(.habr-autocomplete__list) {
-  max-height: 320px;
-  overflow: scroll;
+  /* Вынес бы стиль в computed в будущем и 4 и 80 стали бы пропсами/реактивным */
+  max-height: calc(4 * 80px);
+  overflow-y: scroll;
 }
 @media (max-width: 600px) {
   .habr-suggest {

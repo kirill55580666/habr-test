@@ -53,7 +53,7 @@
         @focus="!isSelectedOptionsLimited && (isFocused = true)"
       />
     </div>
-    <template v-if="isFocused">
+    <div v-if="isFocused" class="habr-autocomplete__list-container">
       <div
         v-if="optionsLoading"
         class="habr-autocomplete__loader"
@@ -64,6 +64,7 @@
       </div>
       <div
         v-else-if="isNothingFoundedAtOptions"
+        class="habr-autocomplete__nothing-found"
         role="alert"
         aria-live="polite"
       >
@@ -77,6 +78,7 @@
       >
         <li
           v-for="(option, index) in filteredOptions"
+          ref="filteredOptionRefs"
           :key="getOptionKey(option, index)"
           :class="[
             'habr-autocomplete__item',
@@ -92,7 +94,7 @@
           </slot>
         </li>
       </ul>
-    </template>
+    </div>
   </div>
 </template>
 <script setup lang="ts">
@@ -160,15 +162,21 @@ const deleteSelectedOption = (index: number) => {
 };
 /** */
 
-/** */
+/** Функциональность выбора опции стрелками */
+const filteredOptionRefs = ref<HTMLInputElement[]>([])
+const activeHtmlElement = computed<HTMLInputElement | null>(() => arrowCounter.value === -1 ? null : filteredOptionRefs.value[arrowCounter.value])
+
 const arrowCounter = ref(-1);
 const downHandler = () => {
   if (arrowCounter.value + 1 === filteredOptions.value.length) return;
   arrowCounter.value += 1;
+
+  activeHtmlElement.value?.scrollIntoView();
 };
 const upHandler = () => {
   if (arrowCounter.value >= 0) {
     arrowCounter.value -= 1;
+    activeHtmlElement.value?.scrollIntoView();
   }
 };
 const enterHandler = () => {
@@ -216,6 +224,17 @@ const isSelectedOptionsLimited = computed<boolean>(
   list-style-type: none;
   width: 100%;
   margin: 0;
+}
+.habr-autocomplete__list-container {
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  border: 1px solid #676774;
+  border-top: none;
+}
+.habr-autocomplete__nothing-found {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 50px;
 }
 .habr-autocomplete__item {
   cursor: pointer;
